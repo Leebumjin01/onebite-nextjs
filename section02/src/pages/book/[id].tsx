@@ -1,12 +1,8 @@
-import {
-  GetServerSidePropsContext,
-  GetStaticPropsContext,
-  InferGetServerSidePropsType,
-  InferGetStaticPropsType,
-} from "next";
+import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
 import style from "./[id].module.css";
 import fetchOneBook from "@/lib/fetch-one-book";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 const mockData = {
   id: 1,
@@ -30,7 +26,7 @@ export const getStaticPaths = () => {
     // fallback -> 위 path가 없을 때 대비책 옵션
     // fallback: false -> id가 1, 2, 3 이 아닌 경우 존재하지 않는 페이지로 취급, 404페이지 호출
     // fallback: "blocking" -> 즉시 생성(사전 렌더링, 마치 SSR 처럼)
-    // falback: true -> 즉시 생성 + 페이지만 미리 반환(props 가 없는 상태로 먼저 반환하고, props를 계산 후, props만 따로 반환)
+    // falback: true -> SRR방식, 즉시 생성 + 페이지만 미리 반환(props 가 없는 상태로 먼저 반환하고, props를 계산 후, props만 따로 반환)
     fallback: true,
   };
 };
@@ -59,7 +55,22 @@ export default function Page({
   const router = useRouter();
 
   // fallback 상태에 빠져있는 상태에서 나오는 텍스트
-  if (router.isFallback) return "Loading...";
+  if (router.isFallback) {
+    return (
+      <>
+        <Head>
+          <title>한입북스</title>
+          <meta property="og:image" content="/thumbnail.png"></meta>
+          <meta property="og:title" content="한입북스"></meta>
+          <meta
+            property="og:description"
+            content="한입 북스에 등록된 도서들을 만나보세요"
+          ></meta>
+        </Head>
+        <div>Loading...</div>
+      </>
+    );
+  }
   // 정말 없는 페이지를 호출하거나, 비정상 접근일 때
   if (!book) return "문제가 발생했습니다 다시 시도하세요";
 
@@ -67,19 +78,27 @@ export default function Page({
     book;
 
   return (
-    <div className={style.container}>
-      <div
-        className={style.cover_img_container}
-        style={{ backgroundImage: `url('${coverImgUrl}')` }}
-      >
-        <img src={coverImgUrl} />
+    <>
+      <Head>
+        <title>{title}</title>
+        <meta property="og:image" content={coverImgUrl}></meta>
+        <meta property="og:title" content={title}></meta>
+        <meta property="og:description" content={description}></meta>
+      </Head>
+      <div className={style.container}>
+        <div
+          className={style.cover_img_container}
+          style={{ backgroundImage: `url('${coverImgUrl}')` }}
+        >
+          <img src={coverImgUrl} />
+        </div>
+        <div className={style.title}>{title}</div>
+        <div className={style.subTitle}>{subTitle}</div>
+        <div className={style.author}>
+          {author} | {publisher}
+        </div>
+        <div className={style.description}>{description}</div>
       </div>
-      <div className={style.title}>{title}</div>
-      <div className={style.subTitle}>{subTitle}</div>
-      <div className={style.author}>
-        {author} | {publisher}
-      </div>
-      <div className={style.description}>{description}</div>
-    </div>
+    </>
   );
 }
