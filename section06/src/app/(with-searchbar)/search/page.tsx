@@ -1,4 +1,5 @@
 import BookItem from "@/components/book-item";
+import BookListSkeleton from "@/components/skeleton/book-list-skeleton";
 import { BookData } from "@/types";
 import { delay } from "@/util/delay";
 import { Suspense } from "react";
@@ -34,7 +35,10 @@ export default function Page({
 }) {
   return (
     // searchParams 의 query string이 변경 될 때마다 새로운 컴포넌트로 인식하게끔 처리
-    <Suspense key={searchParams.q || ""} fallback={<div>Loading ...</div>}>
+    <Suspense
+      key={searchParams.q || ""}
+      fallback={<BookListSkeleton count={3} />}
+    >
       <SearchResult q={searchParams.q || ""} />
     </Suspense>
   );
