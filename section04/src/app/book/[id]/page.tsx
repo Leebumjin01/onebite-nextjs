@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import style from "./page.module.css";
 
 export default async function Page({
@@ -10,6 +11,9 @@ export default async function Page({
   );
 
   if (!response.ok) {
+    if (response.status === 404) {
+      notFound();
+    }
     return <div>오류가 발생했습니다...</div>;
   }
 
