@@ -11,7 +11,8 @@ export function generateStaticParams() {
 
 async function BookDetail({ bookId }: { bookId: string }) {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/${bookId}`
+    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/${bookId}`,
+    { cache: "force-cache" }
   );
 
   if (!response.ok) {
@@ -23,8 +24,15 @@ async function BookDetail({ bookId }: { bookId: string }) {
 
   const book = await response.json();
 
-  const { id, title, subTitle, description, author, publisher, coverImgUrl } =
-    book;
+  const {
+    id,
+    title,
+    subTitle,
+    description,
+    author,
+    publisher,
+    coverImgUrl,
+  } = book;
 
   return (
     <section>
@@ -46,10 +54,12 @@ async function BookDetail({ bookId }: { bookId: string }) {
 
 async function ReviewList({ bookId }: { bookId: string }) {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/review/book/${bookId}`
+    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/review/book/${bookId}`,
+    { cache: "force-cache" }
   );
+
   if (!response.ok) {
-    throw new Error(`reView fetch failed : ${response.statusText}`);
+    throw new Error(`Review fetch failed : ${response.statusText}`);
   }
 
   const reviews: ReviewData[] = await response.json();

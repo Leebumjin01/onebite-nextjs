@@ -12,6 +12,7 @@
 .content {
   background-color: rgb(240, 240, 240);
   padding: 15px 10px;
+  border-radius: 5px;
 }
 
 .bottom_container {
