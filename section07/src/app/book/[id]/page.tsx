@@ -24,15 +24,8 @@ async function BookDetail({ bookId }: { bookId: string }) {
 
   const book = await response.json();
 
-  const {
-    id,
-    title,
-    subTitle,
-    description,
-    author,
-    publisher,
-    coverImgUrl,
-  } = book;
+  const { id, title, subTitle, description, author, publisher, coverImgUrl } =
+    book;
 
   return (
     <section>
