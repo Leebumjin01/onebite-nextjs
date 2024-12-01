@@ -1,1 +1,1 @@
-* https://onebite-books-app-lake.vercel.app/book/8
+* https://onebite-books-app-lake.vercel.app
